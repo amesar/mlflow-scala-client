@@ -5,9 +5,10 @@ import org.json4s.native.JsonMethods.parse
 import org.json4s.jackson.Serialization.{read,write}
 import org.json4s.DefaultFormats
 
-class ApiClient(apiUrl: String) {
+class ApiClient(apiUri: String) {
   implicit val formats = DefaultFormats
-  println(s"apiClient: apiUrl=$apiUrl")
+  val baseUri = s"$apiUri/api/2.0/preview/mlflow"
+  println(s"apiClient: apiUri=$apiUri")
 
   def createExperiment(name: String) : String = {
     val imap = Map("name" -> name)
@@ -84,7 +85,7 @@ class ApiClient(apiUrl: String) {
     rsp.body
   }
 
-  def mkUrl(path: String) = s"$apiUrl/$path"
+  def mkUrl(path: String) = s"$baseUri/$path"
 
   def checkError(rsp: HttpResponse[String]) {
     println(s"apiClient.checkError: rsp.code: ${rsp.code}")
