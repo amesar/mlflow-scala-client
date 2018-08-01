@@ -53,6 +53,19 @@ class ApiClient(apiUri: String) {
   }
 
 
+  def getExperimentByName(experimentName: String) : Option[ExperimentDetails] = {
+    getExperiments() find (_.name == experimentName)
+  }
+
+  def getOrCreateExperimentId(experimentName: String) : String = {
+    val expOpt = getExperiments() find (_.name == experimentName)
+    expOpt match {
+      case Some(exp) => exp.experiment_id
+      case None => createExperiment(experimentName)
+    }
+  }
+
+
   def getAsMap(path: String) : Map[String,Any] = {
     jsonToMap(get(path))
   }
