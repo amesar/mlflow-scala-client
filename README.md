@@ -73,7 +73,7 @@ Experiment(ExperimentDetails(1,train_diabetes,/Users/andre/work/mlflow/mlruns/1)
 
 #### Create an experiment
 ```
-scala -cp $JAR org.andre.mlflow.client.samples.CreateExperiment $URL MyExperiment
+scala -cp $JAR org.andre.mlflow.client.samples.CreateExperiment $URL MyExperimentName
 ```
 
 ### Runs

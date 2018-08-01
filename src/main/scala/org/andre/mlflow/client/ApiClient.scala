@@ -9,18 +9,19 @@ import org.json4s.DefaultFormats
 
 class ApiClient(apiUrl: String) {
   implicit val formats = DefaultFormats
+  val user = sys.env("USER")
   println(s"apiClient: apiUrl=$apiUrl")
+  println(s"apiClient: user=$user")
 
   def createExperiment(name: String) : String = {
     val imap = Map("name" -> name)
     val ijson = compact(render(imap))
-    val ijson2 = compact(render(ijson)) // NOTE: MLflow server expects "{\"name\":\"exp1\"}" instead of {"name":"exp1"} !!
-    val ojson = post(s"experiments/create", ijson2)
+    val ojson = post(s"experiments/create", ijson)
     val omap = jsonToMap(ojson)
     omap("experimentId").toString
   }
 
-  def getExperiments() : List[ExperimentDetails] = {
+  def getExperiments() : Seq[ExperimentDetails] = {
     val json = get(s"experiments/list")
     val exps = read[ExperimentList](json)
     exps.experiments
@@ -56,11 +57,12 @@ class ApiClient(apiUrl: String) {
     rsp.body
   }
 
-  def post(path: String, data: String) : String = {
+  def post(path: String, json: String) : String = {
+    val json2 = compact(render(json)) // NOTE: MLflow server expects "{\"name\":\"exp1\"}" instead of {"name":"exp1"}! This the result of python json.dump(jsonAsString).
     val url = mkUrl(path)
     println("apiClient.post: url: "+url)
-    println("apiClient.post: data: "+data)
-    val req = Http(url).postData(data).header("Content-Type", "application/json")
+    println("apiClient.post: data: "+json)
+    val req = Http(url).postData(json2).header("Content-Type", "application/json")
     val rsp = req.asString
     checkError(rsp)
     println("apiClient.post: rsp.body: "+rsp.body)

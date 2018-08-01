@@ -1,5 +1,6 @@
 package org.andre.mlflow.client
 
+
 case class RunInfo(
   run_uuid: String,
   experiment_id: String,
@@ -21,9 +22,13 @@ case class Metric(
   value: String, 
   timestamp: String)
 
+case class RunTag(
+  key: String, 
+  value: String)
+
 class RunData(
-  params: List[Param],
-  metrics: List[Metric])
+  params: Seq[Param],
+  metrics: Seq[Metric])
 
 case class RunWrapper(
   info: RunInfo, 
@@ -39,7 +44,7 @@ case class ExperimentDetails(
 
 case class Experiment(
   experiment: ExperimentDetails, 
-  runs: List[RunInfo])
+  runs: Seq[RunInfo])
 
 case class ExperimentList(
-  experiments: List[ExperimentDetails])
+  experiments: Seq[ExperimentDetails])
