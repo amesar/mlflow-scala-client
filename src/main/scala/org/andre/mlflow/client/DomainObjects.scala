@@ -1,5 +1,32 @@
 package org.andre.mlflow.client
 
+case class RunUpdate(
+  run_uuid: String,
+  status: String,
+  end_time: Long)
+
+case class RunCreate(
+  experiment_id: String,
+  run_name: String,
+  source_type: String,
+  source_name: String,
+  start_time: Long,
+  user_id: String)
+  //run_tags: Seq[RunTag])
+
+case class RunCreateResult(
+  run_uuid: String,
+  experiment_id: String,
+  name: String,
+  source_type: String,
+  source_name: String,
+  user_id: String,
+  status: String,
+  start_time: String,
+  artifact_uri: String)
+
+case class _RunCreateResultWrapper(info: RunCreateResult)
+case class RunCreateResultWrapper(run: _RunCreateResultWrapper)
 
 case class RunInfo(
   run_uuid: String,
@@ -13,17 +40,28 @@ case class RunInfo(
   end_time: String,
   artifact_uri: String)
 
+case class LogParam(
+  run_uuid: String,
+  key: String,
+  value: String)
+
+case class LogMetric(
+  run_uuid: String,
+  key: String,
+  value: Double,
+  timestamp: Long)
+
 case class Param(
-  key: String, 
+  key: String,
   value: String)
 
 case class Metric(
-  key: String, 
-  value: String, 
+  key: String,
+  value: Double,
   timestamp: String)
 
 case class RunTag(
-  key: String, 
+  key: String,
   value: String)
 
 class RunData(
@@ -31,19 +69,19 @@ class RunData(
   metrics: Seq[Metric])
 
 case class RunWrapper(
-  info: RunInfo, 
+  info: RunInfo,
   data: RunData)
 
 case class Run(
   run: RunWrapper)
 
 case class ExperimentDetails(
-  experiment_id: String, 
-  name: String, 
+  experiment_id: String,
+  name: String,
   artifact_location: String)
 
 case class Experiment(
-  experiment: ExperimentDetails, 
+  experiment: ExperimentDetails,
   runs: Seq[RunInfo])
 
 case class ExperimentList(
