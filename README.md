@@ -9,6 +9,11 @@ and [REST API](https://mlflow.org/docs/latest/rest_api.html).
 * Scala 2.11.8
 * sbt
 
+## Build
+```
+sbt assembly
+```
+
 ## Scala Client API
 
 See [ApiClient.scala](src/main/scala/org/andre/mlflow/client/ApiClient.scala) 

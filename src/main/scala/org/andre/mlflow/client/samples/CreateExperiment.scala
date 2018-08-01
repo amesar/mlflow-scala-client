@@ -7,6 +7,6 @@ object CreateExperiment {
     val client = new ApiClient(args(0))
     val expName = args(1)
     val expId = client.createExperiment(expName)
-    println(s"$expName $expId")
+    println(s"experimentName: $expName   experimentId: $expId")
   }
 }

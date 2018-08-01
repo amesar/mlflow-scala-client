@@ -12,9 +12,12 @@ class ApiClient(apiUrl: String) {
   println(s"apiClient: apiUrl=$apiUrl")
 
   def createExperiment(name: String) : String = {
-    val map = Map("name" -> name)
-    val json = compact(render(map))
-    post(s"experiments/create", json)
+    val imap = Map("name" -> name)
+    val ijson = compact(render(imap))
+    val ijson2 = compact(render(ijson)) // NOTE: MLflow server expects "{\"name\":\"exp1\"}" instead of {"name":"exp1"} !!
+    val ojson = post(s"experiments/create", ijson2)
+    val omap = jsonToMap(ojson)
+    omap("experimentId").toString
   }
 
   def getExperiments() : List[ExperimentDetails] = {
@@ -34,7 +37,10 @@ class ApiClient(apiUrl: String) {
   }
 
   def getAsMap(path: String) : Map[String,Any] = {
-    val json = get(path)
+    jsonToMap(get(path))
+  } 
+
+  def jsonToMap(json: String) : Map[String,Any] = {
     val obj = parse(json)
     obj.extract[Map[String, Any]] 
   }
@@ -46,7 +52,7 @@ class ApiClient(apiUrl: String) {
     val req = Http(url).method("GET")
     val rsp = req.asString
     checkError(rsp)
-    println("apiClient.get: json: "+rsp.body)
+    println("apiClient.get: rsp.body: "+rsp.body)
     rsp.body
   }
 
@@ -54,10 +60,10 @@ class ApiClient(apiUrl: String) {
     val url = mkUrl(path)
     println("apiClient.post: url: "+url)
     println("apiClient.post: data: "+data)
-    val req = Http(url).postData(data)
+    val req = Http(url).postData(data).header("Content-Type", "application/json")
     val rsp = req.asString
     checkError(rsp)
-    println("apiClient.post: json: "+rsp.body)
+    println("apiClient.post: rsp.body: "+rsp.body)
     rsp.body
   }
 
