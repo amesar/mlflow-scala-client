@@ -37,7 +37,7 @@ def getRun(runUuid: String) : Run
 
 def logParameter(run_uuid: String, key: String, value: String) 
 
-def logMetric(run_uuid: String, key: String, value: Double, timestamp: Long) 
+def logMetric(run_uuid: String, key: String, value: Double, timestamp: Long = System.currentTimeMillis)
 
 `
 def getExperimentByName(experimentName: String) : Option[ExperimentDetails] 
@@ -76,9 +76,9 @@ object MLflowClientSample {
     client.logParameter(runId, "max_depth", "3")
 
     // Log metrics
-    client.logMetric(runId, "auc", 2.12, System.currentTimeMillis)
-    client.logMetric(runId, "accuracy_score", 3.12, System.currentTimeMillis)
-    client.logMetric(runId, "zero_one_loss", 4.12, System.currentTimeMillis)
+    client.logMetric(runId, "auc", 2.12)
+    client.logMetric(runId, "accuracy_score", 3.12)
+    client.logMetric(runId, "zero_one_loss", 4.12)
 
     // Update finished run
     val update = RunUpdate(runId, "FINISHED", System.currentTimeMillis)

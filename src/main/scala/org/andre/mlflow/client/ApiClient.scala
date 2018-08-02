@@ -48,7 +48,7 @@ class ApiClient(apiUri: String) {
     post(s"runs/log-parameter", write(LogParam(run_uuid,key,value)))
   }
 
-  def logMetric(run_uuid: String, key: String, value: Double, timestamp: Long) {
+  def logMetric(run_uuid: String, key: String, value: Double, timestamp: Long = System.currentTimeMillis) {
     post(s"runs/log-metric", write(LogMetric(run_uuid,key,value,timestamp)))
   }
 

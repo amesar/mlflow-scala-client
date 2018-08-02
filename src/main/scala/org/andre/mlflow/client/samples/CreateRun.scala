@@ -23,9 +23,9 @@ object CreateRun {
     client.logParameter(runId, "max_depth", "3")
 
     // Log metrics
-    client.logMetric(runId, "auc", 2.12, start_time+100)
-    client.logMetric(runId, "accuracy_score", 3.12, start_time+100)
-    client.logMetric(runId, "zero_one_loss", 4.12, start_time+100)
+    client.logMetric(runId, "auc", 2.12)
+    client.logMetric(runId, "accuracy_score", 3.12)
+    client.logMetric(runId, "zero_one_loss", 4.12)
 
     // Update finished run
     val update = RunUpdate(runId, "FINISHED", start_time+1001)
