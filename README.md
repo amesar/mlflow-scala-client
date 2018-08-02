@@ -26,10 +26,29 @@ def getExperiments() : List[ExperimentDetails]
 
 def getExperiment(experimentId: String) : Experiment 
 
+
+def createRun(run: RunCreate) : RunCreateResult 
+
+def updateRun(run: RunUpdate)
+
 def getRun(runUuid: String) : Run 
+
+
+def logParameter(run_uuid: String, key: String, value: String) 
+
+def logMetric(run_uuid: String, key: String, value: Double, timestamp: Long) 
+
+`
+def getExperimentByName(experimentName: String) : Option[ExperimentDetails] 
+
+def getOrCreateExperimentId(experimentName: String) : String 
+
 ```
 
 ## Usage
+
+See [CreateRun.scala](src/main/scala/org/andre/mlflow/client/samples/CreateRun.scala).
+
 ```
 import org.andre.mlflow.client.{ApiClient,RunCreate,RunUpdate,LogParam,LogMetric}
 
@@ -43,12 +62,10 @@ object MLflowClientSample {
     val experiments = client.getExperiments()
     println("Experiments:\n"+experiments)
 
-    val start_time = System.currentTimeMillis
-
     // Placeholder - train your model...
 
     // Create run
-    val irun = RunCreate(experiment_id, "MyRun", "LOCAL", "MLflowClientSample.scala", start_time, "john_doe")
+    val irun = RunCreate(experiment_id, "MyRun", "LOCAL", "MLflowClientSample.scala", System.currentTimeMillis, "john_doe")
     val orun = client.createRun(irun)
     println(s"CreatedRun: $orun")
     val runId = orun.run_uuid
@@ -58,29 +75,43 @@ object MLflowClientSample {
     client.logParameter(runId, "max_depth", "3")
 
     // Log metrics
-    client.logMetric(runId, "auc", 2.12, start_time+100)
-    client.logMetric(runId, "accuracy_score", 3.12, start_time+100)
-    client.logMetric(runId, "zero_one_loss", 4.12, start_time+100)
+    client.logMetric(runId, "auc", 2.12, System.currentTimeMillis)
+    client.logMetric(runId, "accuracy_score", 3.12, System.currentTimeMillis)
+    client.logMetric(runId, "zero_one_loss", 4.12, System.currentTimeMillis)
 
     // Update finished run
-    val update = RunUpdate(runId, "FINISHED", start_time+1001)
+    val update = RunUpdate(runId, "FINISHED", System.currentTimeMillis)
     client.updateRun(update)
 
     // Get run details
     val run = client.getRun(runId)
     println(s"Run: $run")
-
   }
 }
 ```
 
-## Run API client
+## Run API client samples
 
 **Initialize**
 ```
 JAR=target/scala-2.11/amm-MLflowClient-assembly-0.1-SNAPSHOT.jar
-API_URI=http://localhost:5000/api/2.0/preview/mlflow
+API_URI=http://localhost:5000
 ```
+
+### Sample Track Training Run
+
+[CreateRun.scala](src/main/scala/org/andre/mlflow/client/samples/CreateRun.scala) does the following:
+* Creates run from an existing experiment
+* Logs some parameters
+* Logs some metrics
+* Updates finished run
+* Gets run details
+
+```
+scala -cp $JAR org.andre.mlflow.client.samples.CreateRun $API_URI 2
+```
+
+TODO: Add Scala try-with-resources analog of Python context manager aka "with".
 
 ### Experiments
 
