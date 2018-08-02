@@ -87,11 +87,10 @@ class ApiClient(apiUri: String) {
   }
 
   def post(path: String, json: String) : String = {
-    val json2 = write(json) // NOTE: MLflow server expects "{\"name\":\"exp1\"}" instead of {"name":"exp1"}! This the result of python json.dump(jsonAsString).
     val url = mkUrl(path)
     println(s"apiClient.post: url: $url")
     println(s"apiClient.post: data: $json")
-    val req = Http(url).postData(json2).header("Content-Type", "application/json")
+    val req = Http(url).postData(json)
     val rsp = req.asString
     checkError(rsp)
     println(s"apiClient.post: rsp.body: ${rsp.body}")

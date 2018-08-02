@@ -8,6 +8,7 @@ and [REST API](https://mlflow.org/docs/latest/rest_api.html).
 
 * Scala 2.11.8
 * sbt
+* mlflow 3.1+ - to fix double encoding of JSON requests
 
 ## Build
 ```
